@@ -6,7 +6,7 @@ export async function getAllLoans() {
   return loans;
 }
 
-export async function createLoan(data: CreateLoanDto) {
+export async function createLoan(data: CreateLoanDto & { userId: string }) {
   const user = await client.user.findUnique({ where: { id: data.userId } });
   if (!user) {
     throw new Error("User not found");
@@ -67,4 +67,8 @@ export async function returnLoan(id: string) {
   });
 
   return updatedLoan;
+}
+export async function getLoansByUserId(userId: string) {
+  const loans = await client.loan.findMany({ where: { userId } });
+  return loans;
 }

@@ -10,8 +10,9 @@ export async function getAllLoans(req: Request, res: Response) {
 
 export async function createLoan(req: Request, res: Response) {
   try {
+    const user = (req as any).user;
     const parsed = createLoanSchema.parse(req.body);
-    const loan = await loansService.createLoan(parsed);
+    const loan = await loansService.createLoan({...parsed, userId: user.userId });
     res.status(201).json({ data: loan });
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -26,3 +27,9 @@ export async function returnLoan(req: Request<IdParams>, res: Response) {
     res.status(400).json({ error: error.message });
   }
 }
+
+export const getLoansByUserId = async (userId: number) => {
+  return [
+    { id: 1, userId, bookId: 1, returned: false },
+  ];
+};
