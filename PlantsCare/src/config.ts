@@ -13,11 +13,11 @@ function getEnvironmentVariable(name: string, defaultValue?: string): string {
 const CONFIG = {
   jwtSecret: getEnvironmentVariable("JWT_SECRET"),
   jwtExpiresIn: getEnvironmentVariable("JWT_EXPIRES_IN", "7d"),
-  smtpHost: getEnvironmentVariable("SMTP_HOST"),
-  smtpPort: Number.parseInt(getEnvironmentVariable("SMTP_PORT"), 10),
-  smtpAuthUser: getEnvironmentVariable("SMTP_AUTH_USER"),
-  smtpAuthPass: getEnvironmentVariable("SMTP_AUTH_PASS"),
-  senderEmail: getEnvironmentVariable("SENDER_EMAIL"),
+  smtpHost: getEnvironmentVariable("SMTP_HOST", "smtp.gmail.com"),
+  smtpPort: Number.parseInt(getEnvironmentVariable("SMTP_PORT", "587"), 10),
+  smtpAuthUser: getEnvironmentVariable("SMTP_AUTH_USER", ""),
+  smtpAuthPass: getEnvironmentVariable("SMTP_AUTH_PASS", ""),
+  senderEmail: getEnvironmentVariable("SENDER_EMAIL", ""),
 };
 
 export default CONFIG;
