@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+model User {
+  id                 String      @id @default(uuid())
+  name               String
+  email              String      @unique
+  passwordHash       String
+  role               String      @default("USER")
+  avatarUrl          String?
+  resetToken         String?
+  resetTokenExpires  DateTime?
+  userPlants         UserPlant[]
+}
+
+model Plant {
+  id            String      @id @default(uuid())
+  name          String
+  species       String
+  description   String
+  lightning     String
+  watering      String
+  wateringIntervalDays Int      @default(7)
+  temperature   String
+  transplanting String
+  userPlants    UserPlant[]
+}
+
+model UserPlant {
+  id        String   @id @default(uuid())
+  nickname  String?
+  lastWater DateTime @default(now())
+  notes     String?
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  plant     Plant    @relation(fields: [plantId], references: [id])
+  plantId   String
+  careLogs  CareLog[] 
+  reminders Reminder[]
+}
+
+model CareLog {
+  id          String   @id @default(uuid())
+  type        String   // "watering", "fertilizing", "repotting" тощо
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  userPlant   UserPlant @relation(fields: [userPlantId], references: [id])
+  userPlantId String
+}
+
+model Reminder {
+  id          String   @id @default(uuid())
+  type        String   // "watering", "fertilizing"
+  remindAt    DateTime
+  done        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  userPlant   UserPlant @relation(fields: [userPlantId], references: [id])
+  userPlantId String
+}
